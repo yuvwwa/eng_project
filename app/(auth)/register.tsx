@@ -7,8 +7,6 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState<string>('');
 
   const handleRegister = () => {
-    // логика регистрации
-    // после регистрации переходим на логин
     router.push('/(auth)/login');
   };
 

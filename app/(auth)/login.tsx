@@ -7,8 +7,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState<string>('');
 
   const handleLogin = () => {
-    // логика входа (в будущем можно добавить проверку)
-    // временно делаем редирект на основной экран после "входа"
     router.push('/(tabs)');
   };
 
@@ -51,8 +49,8 @@ export default function LoginScreen() {
 
         <TouchableOpacity style={styles.googleButton}>
           <Image
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }} // убедитесь, что ссылка правильная
-            style={[styles.socialIcon, { tintColor: 'white' }]} // применяем белый цвет
+            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }}
+            style={[styles.socialIcon, { tintColor: 'white' }]}
           />
           <Text style={styles.socialButtonText}>Sign in with Google</Text>
         </TouchableOpacity>
