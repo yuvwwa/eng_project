@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import {StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Alert} from 'react-native';
 import { router } from 'expo-router';
+import { useDispatch, useSelector } from 'react-redux';
+import {AppDispatch, RootState} from "@/store";
+import {login} from "@/store/reducers/auth.reducer";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const handleLogin = () => {
-    router.push('/(tabs)');
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: RootState) => state.authReducer);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
+      return;
+    }
+
+    dispatch(login({ email, password }));
+
+    router.replace('/(tabs)');
   };
 
   const handleGoToRegister = () => {
@@ -17,6 +30,8 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
         <Text style={styles.title}>Hello there!</Text>
 
         <Text style={styles.label}>Email</Text>
@@ -36,8 +51,8 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.signUpButton} onPress={handleLogin}>
-          <Text style={styles.signUpButtonText}>Войти</Text>
+        <TouchableOpacity style={styles.signUpButton} onPress={handleLogin} disabled={loading}>
+          <Text style={styles.signUpButtonText}>{loading ? 'Вход...' : 'Войти'}</Text>
         </TouchableOpacity>
 
         <View style={styles.loginContainer}>
@@ -55,7 +70,7 @@ export default function LoginScreen() {
           <Text style={styles.socialButtonText}>Sign in with Google</Text>
         </TouchableOpacity>
 
-        
+
         <TouchableOpacity style={styles.appleButton}>
         <Image
           source={{ uri: 'https://cdn-icons-png.flaticon.com/512/0/747.png' }}
@@ -83,6 +98,10 @@ const styles = StyleSheet.create({
     padding: 30,
     borderWidth: 1,
     borderColor: '#000',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 15,
   },
   title: {
     fontSize: 28,
