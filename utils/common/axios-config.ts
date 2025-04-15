@@ -7,7 +7,7 @@ import axios, {
 import { store } from '@/store';
 import { TokenService } from '@/services/TokenService';
 import { JwtService } from '@/services/JWTService';
-import {logout, refreshTokens} from "@/store/reducers/auth.reducer";
+import { logout, refreshTokens } from '@/store/reducers/auth.reducer';
 
 const API_URL = '';
 

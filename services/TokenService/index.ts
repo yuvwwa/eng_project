@@ -5,7 +5,10 @@ const ACCESS_TOKEN_KEY = 'ACCESS_TOKEN';
 const REFRESH_TOKEN_KEY = 'REFRESH_TOKEN';
 
 export class TokenService {
-  static async setTokens({ access_jwt, refresh_jwt }: TokenObjectModel): Promise<void> {
+  static async setTokens({
+    access_jwt,
+    refresh_jwt,
+  }: TokenObjectModel): Promise<void> {
     try {
       await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, access_jwt);
       await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refresh_jwt);

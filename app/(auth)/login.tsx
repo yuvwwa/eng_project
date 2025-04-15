@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import {StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Alert} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+} from 'react-native';
 import { router } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
-import {AppDispatch, RootState} from "@/store";
-import {login} from "@/store/reducers/auth.reducer";
+import { AppDispatch, RootState } from '@/store';
+import { login } from '@/store/reducers/auth.reducer';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error } = useSelector((state: RootState) => state.authReducer);
+  const { loading, error } = useSelector(
+    (state: RootState) => state.authReducer,
+  );
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -51,8 +61,13 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.signUpButton} onPress={handleLogin} disabled={loading}>
-          <Text style={styles.signUpButtonText}>{loading ? 'Вход...' : 'Войти'}</Text>
+        <TouchableOpacity
+          style={styles.signUpButton}
+          onPress={handleLogin}
+          disabled={loading}>
+          <Text style={styles.signUpButtonText}>
+            {loading ? 'Вход...' : 'Войти'}
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.loginContainer}>
@@ -64,19 +79,22 @@ export default function LoginScreen() {
 
         <TouchableOpacity style={styles.googleButton}>
           <Image
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }}
+            source={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png',
+            }}
             style={[styles.socialIcon, { tintColor: 'white' }]}
           />
           <Text style={styles.socialButtonText}>Sign in with Google</Text>
         </TouchableOpacity>
 
-
         <TouchableOpacity style={styles.appleButton}>
-        <Image
-          source={{ uri: 'https://cdn-icons-png.flaticon.com/512/0/747.png' }}
-          style={[styles.socialIcon, { tintColor: 'white' }]}
-        />
-          <Text style={[styles.socialButtonText, styles.appleButtonText]}>Sign in with Apple</Text>
+          <Image
+            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/0/747.png' }}
+            style={[styles.socialIcon, { tintColor: 'white' }]}
+          />
+          <Text style={[styles.socialButtonText, styles.appleButtonText]}>
+            Sign in with Apple
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

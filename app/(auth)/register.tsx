@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import { router } from 'expo-router';
 
 export default function RegisterScreen() {
@@ -49,7 +56,9 @@ export default function RegisterScreen() {
 
         <TouchableOpacity style={styles.googleButton}>
           <Image
-            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png' }}
+            source={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png',
+            }}
             style={[styles.socialIcon, { tintColor: 'white' }]}
           />
           <Text style={styles.socialButtonText}>Sign up with Google</Text>
@@ -60,7 +69,9 @@ export default function RegisterScreen() {
             source={{ uri: 'https://cdn-icons-png.flaticon.com/512/0/747.png' }}
             style={[styles.socialIcon, { tintColor: 'white' }]}
           />
-          <Text style={[styles.socialButtonText, styles.appleButtonText]}>Sign up with Apple</Text>
+          <Text style={[styles.socialButtonText, styles.appleButtonText]}>
+            Sign up with Apple
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
