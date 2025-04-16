@@ -3,10 +3,9 @@ import {
   TokenObjectModel,
   UserCredentials,
 } from '@/models/login-response.model';
-import api from '@/utils/common/axios-config';
 import { TokenService } from '../TokenService';
 import { JwtService } from '../JWTService';
-import jwtDecode from 'jwt-decode';
+import { api } from '@/utils/common/axios-config';
 
 export class AuthService {
   /**
@@ -77,7 +76,6 @@ export class AuthService {
    */
   static async logout(): Promise<void> {
     try {
-      // Опционально: сообщить серверу о выходе пользователя
       const accessToken = await TokenService.getAccessToken();
       if (accessToken) {
         await api.post('/auth/logout');
@@ -85,7 +83,6 @@ export class AuthService {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      // В любом случае удаляем токены
       await TokenService.removeTokens();
     }
   }
@@ -120,9 +117,5 @@ export class AuthService {
     // Если токен действителен, возвращаем текущие данные
     const authData = JwtService.getUserInfo(accessToken);
     return { accessToken, refreshToken, authData };
-  }
-
-  static getCredentialsFromToken(token: string): ILoginJWTDecode {
-    return jwtDecode.jwtDecode<ILoginJWTDecode>(token);
   }
 }

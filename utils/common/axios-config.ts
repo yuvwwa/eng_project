@@ -4,14 +4,14 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from 'axios';
-import { store } from '@/store';
 import { TokenService } from '@/services/TokenService';
 import { JwtService } from '@/services/JWTService';
-import { logout, refreshTokens } from '@/store/reducers/auth.reducer';
 
-const API_URL = '';
+let storeRef: any = null;
 
-const api: AxiosInstance = axios.create({
+export const API_URL = '';
+
+export const api: AxiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -19,83 +19,71 @@ const api: AxiosInstance = axios.create({
   timeout: 10000,
 });
 
-/*api.interceptors.request.use(
-  async (
-    config: InternalAxiosRequestConfig,
-  ): Promise<InternalAxiosRequestConfig> => {
-    const accessToken = await TokenService.getAccessToken();
+export const initAxiosInterceptors = (store: any) => {
+  storeRef = store;
 
-    if (accessToken) {
-      if (JwtService.isTokenExpired(accessToken)) {
-        try {
-          // Диспатчим через store.dispatch, так как мы не в React компоненте
-          const resultAction = await store.dispatch(refreshTokens());
+  api.interceptors.request.use(
+    async (
+      config: InternalAxiosRequestConfig,
+    ): Promise<InternalAxiosRequestConfig> => {
+      const accessToken = await TokenService.getAccessToken();
 
-          if (refreshTokens.fulfilled.match(resultAction)) {
-            const { access_jwt } = resultAction.payload.tokens;
-            config.headers = config.headers || {};
-            config.headers.Authorization = `Bearer ${access_jwt}`;
+      if (accessToken) {
+        if (JwtService.isTokenExpired(accessToken)) {
+          try {
+            const resultAction = await storeRef.dispatch(
+              storeRef.refreshTokens(),
+            );
+
+            if (storeRef.refreshTokens.fulfilled.match(resultAction)) {
+              const { access_jwt } = resultAction.payload.tokens;
+              config.headers = config.headers || {};
+              config.headers.Authorization = `Bearer ${access_jwt}`;
+            }
+          } catch (error) {
+            console.error('Failed to refresh token:', error);
           }
-        } catch (error) {
-          console.error('Failed to refresh token:', error);
+        } else {
+          config.headers = config.headers || {};
+          config.headers.Authorization = `Bearer ${accessToken}`;
         }
-      } else {
-        config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${accessToken}`;
       }
-    }
 
-    return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
-  },
-);
+      return config;
+    },
+    (error: AxiosError) => Promise.reject(error),
+  );
 
-// Перехватчик ответов
-api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config;
+  api.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    async (error: AxiosError) => {
+      const originalRequest = error.config;
 
-    if (
-      originalRequest &&
-      error.response?.status === 401 &&
-      !(originalRequest as any)._retry
-    ) {
-      (originalRequest as any)._retry = true;
+      if (
+        originalRequest &&
+        error.response?.status === 401 &&
+        !(originalRequest as any)._retry
+      ) {
+        (originalRequest as any)._retry = true;
 
-      try {
-        // Диспатчим через store.dispatch
-        const resultAction = await store.dispatch(refreshTokens());
+        try {
+          const resultAction = await storeRef.dispatch(
+            storeRef.refreshTokens(),
+          );
 
-        if (refreshTokens.fulfilled.match(resultAction)) {
-          const { access_jwt } = resultAction.payload.tokens;
-          originalRequest.headers = originalRequest.headers || {};
-          originalRequest.headers.Authorization = `Bearer ${access_jwt}`;
-          return api(originalRequest);
+          if (storeRef.refreshTokens.fulfilled.match(resultAction)) {
+            const { access_jwt } = resultAction.payload.tokens;
+            originalRequest.headers = originalRequest.headers || {};
+            originalRequest.headers.Authorization = `Bearer ${access_jwt}`;
+            return api(originalRequest);
+          }
+        } catch (refreshError) {
+          storeRef.dispatch(storeRef.logout());
+          return Promise.reject(refreshError);
         }
-      } catch (refreshError) {
-        // Если не удалось обновить токен, разлогиниваем пользователя
-        store.dispatch(logout());
-        return Promise.reject(refreshError);
       }
-    }
 
-    // Обработка других ошибок
-    if (error.response) {
-      // Серверные ошибки (4xx, 5xx)
-      console.error('Server Error:', error.response.data);
-    } else if (error.request) {
-      // Запрос был сделан, но нет ответа
-      console.error('Network Error:', error.request);
-    } else {
-      // Что-то пошло не так при настройке запроса
-      console.error('Error:', error.message);
-    }
-
-    return Promise.reject(error);
-  },
-);*/
-
-export default api;
+      return Promise.reject(error);
+    },
+  );
+};

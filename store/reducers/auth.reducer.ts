@@ -5,6 +5,7 @@ import {
   UserCredentials,
 } from '@/models/login-response.model';
 import { AuthService } from '@/services/AuthService';
+import { getCredentialsFromToken } from '@/utils/common/jwt';
 
 export interface AuthState {
   isAuth: boolean;
@@ -84,7 +85,7 @@ export const authSlice = createSlice({
       state.isAuth = true;
       state.accessToken = access_jwt;
       state.refreshToken = refresh_jwt;
-      state.authData = AuthService.getCredentialsFromToken(access_jwt);
+      state.authData = getCredentialsFromToken(access_jwt);
       state.error = null;
     },
     logout(state) {
@@ -110,7 +111,7 @@ export const authSlice = createSlice({
       state.isAuth = true;
       state.accessToken = access_jwt;
       state.refreshToken = refresh_jwt;
-      state.authData = AuthService.getCredentialsFromToken(access_jwt);
+      state.authData = getCredentialsFromToken(access_jwt);
       state.loading = false;
       state.error = null;
     });
@@ -129,7 +130,7 @@ export const authSlice = createSlice({
       state.isAuth = true;
       state.accessToken = access_jwt;
       state.refreshToken = refresh_jwt;
-      state.authData = AuthService.getCredentialsFromToken(access_jwt);
+      state.authData = getCredentialsFromToken(access_jwt);
       state.loading = false;
       state.error = null;
     });
@@ -160,7 +161,7 @@ export const authSlice = createSlice({
       const { access_jwt, refresh_jwt } = action.payload.tokens;
       state.accessToken = access_jwt;
       state.refreshToken = refresh_jwt;
-      state.authData = AuthService.getCredentialsFromToken(access_jwt);
+      state.authData = getCredentialsFromToken(access_jwt);
     });
     builder.addCase(refreshTokens.rejected, state => {
       // При неудачном обновлении токенов разлогиниваем пользователя
