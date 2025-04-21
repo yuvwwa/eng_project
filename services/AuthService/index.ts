@@ -76,10 +76,9 @@ export class AuthService {
    */
   static async logout(): Promise<void> {
     try {
-      const accessToken = await TokenService.getAccessToken();
-      if (accessToken) {
-        await api.post('/auth/logout');
-      }
+      const refreshToken = await TokenService.getRefreshToken();
+      if (refreshToken)
+        await api.post('/auth/logout', { refresh_token: refreshToken });
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -106,10 +105,10 @@ export class AuthService {
     // Если токен доступа истек, пробуем обновить
     if (JwtService.isTokenExpired(accessToken)) {
       const tokens = await this.refreshTokens();
-      const authData = JwtService.getUserInfo(tokens.access_jwt);
+      const authData = JwtService.getUserInfo(tokens.access_token);
       return {
-        accessToken: tokens.access_jwt,
-        refreshToken: tokens.refresh_jwt,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token,
         authData,
       };
     }

@@ -28,9 +28,12 @@ export default function LoginScreen() {
       return;
     }
 
-    dispatch(login({ email, password }));
-
-    router.replace('/(tabs)');
+    const resultAction = await dispatch(login({ email, password }));
+    if (login.fulfilled.match(resultAction)) {
+      router.replace('/(tabs)');
+    } else {
+      Alert.alert('Ошибка', error || 'Неверный email или пароль');
+    }
   };
 
   const handleGoToRegister = () => {
@@ -40,8 +43,6 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        {error && <Text style={styles.errorText}>{error}</Text>}
-
         <Text style={styles.title}>Hello there!</Text>
 
         <Text style={styles.label}>Email</Text>

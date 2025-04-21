@@ -81,11 +81,12 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess(state, action: PayloadAction<{ tokens: TokenObjectModel }>) {
-      const { access_jwt, refresh_jwt } = action.payload.tokens;
+      const { access_token: access_token, refresh_token } =
+        action.payload.tokens;
       state.isAuth = true;
-      state.accessToken = access_jwt;
-      state.refreshToken = refresh_jwt;
-      state.authData = getCredentialsFromToken(access_jwt);
+      state.accessToken = access_token;
+      state.refreshToken = refresh_token;
+      state.authData = getCredentialsFromToken(access_token);
       state.error = null;
     },
     logout(state) {
@@ -107,11 +108,11 @@ export const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      const { access_jwt, refresh_jwt } = action.payload.tokens;
+      const { access_token, refresh_token } = action.payload.tokens;
       state.isAuth = true;
-      state.accessToken = access_jwt;
-      state.refreshToken = refresh_jwt;
-      state.authData = getCredentialsFromToken(access_jwt);
+      state.accessToken = access_token;
+      state.refreshToken = refresh_token;
+      state.authData = getCredentialsFromToken(access_token);
       state.loading = false;
       state.error = null;
     });
@@ -126,11 +127,11 @@ export const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(register.fulfilled, (state, action) => {
-      const { access_jwt, refresh_jwt } = action.payload.tokens;
+      const { access_token, refresh_token } = action.payload.tokens;
       state.isAuth = true;
-      state.accessToken = access_jwt;
-      state.refreshToken = refresh_jwt;
-      state.authData = getCredentialsFromToken(access_jwt);
+      state.accessToken = access_token;
+      state.refreshToken = refresh_token;
+      state.authData = getCredentialsFromToken(access_token);
       state.loading = false;
       state.error = null;
     });
@@ -158,10 +159,10 @@ export const authSlice = createSlice({
 
     // Обработка refreshTokens
     builder.addCase(refreshTokens.fulfilled, (state, action) => {
-      const { access_jwt, refresh_jwt } = action.payload.tokens;
-      state.accessToken = access_jwt;
-      state.refreshToken = refresh_jwt;
-      state.authData = getCredentialsFromToken(access_jwt);
+      const { access_token, refresh_token } = action.payload.tokens;
+      state.accessToken = access_token;
+      state.refreshToken = refresh_token;
+      state.authData = getCredentialsFromToken(access_token);
     });
     builder.addCase(refreshTokens.rejected, state => {
       // При неудачном обновлении токенов разлогиниваем пользователя

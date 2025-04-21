@@ -1,7 +1,12 @@
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useState } from 'react';
+import { logout } from '@/store/reducers/auth.reducer';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
+import { AuthService } from '@/services/AuthService';
 
 export default function HomeScreen() {
+  const dispatch = useDispatch<AppDispatch>();
   const [count, setCount] = useState(0);
 
   return (
@@ -9,6 +14,13 @@ export default function HomeScreen() {
       <Text style={styles.title}>Привет из React Native 👋</Text>
       <Text style={styles.counter}>Счётчик: {count}</Text>
       <Button title="Нажми меня" onPress={() => setCount(count + 1)} />
+      <Button
+        title="Разлогиниться"
+        onPress={async () => {
+          await AuthService.logout();
+          dispatch(logout());
+        }}
+      />
     </View>
   );
 }

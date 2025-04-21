@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,15 +6,34 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
 import { router } from 'expo-router';
+import { register } from '@/store/reducers/auth.reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const handleRegister = () => {
-    router.push('/(auth)/login');
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector(
+    (state: RootState) => state.authReducer,
+  );
+
+  const handleRegister = async () => {
+    if (!email || !password) {
+      Alert.alert('Ошибка', 'Пожалуйста, заполните все поля');
+      return;
+    }
+
+    const resultAction = await dispatch(register({ email, password }));
+    if (register.fulfilled.match(resultAction)) {
+      router.replace('/(tabs)');
+    } else {
+      Alert.alert('Ошибка', error || 'Ошибка регистрации');
+    }
   };
 
   const handleGoToLogin = () => {
@@ -43,8 +62,13 @@ export default function RegisterScreen() {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.signUpButton} onPress={handleRegister}>
-          <Text style={styles.signUpButtonText}>Зарегистрироваться</Text>
+        <TouchableOpacity
+          style={styles.signUpButton}
+          onPress={handleRegister}
+          disabled={loading}>
+          <Text style={styles.signUpButtonText}>
+            {loading ? 'Регистрируем...' : 'Зарегистрироваться'}
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.loginContainer}>

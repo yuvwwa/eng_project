@@ -1,4 +1,4 @@
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { ILoginJWTDecode } from '@/models/login-response.model';
 
 interface JwtPayload {
@@ -15,7 +15,7 @@ export class JwtService {
    */
   static decodeToken<T = ILoginJWTDecode>(token: string): T {
     try {
-      return jwtDecode.jwtDecode<T>(token);
+      return jwtDecode<T>(token);
     } catch (error) {
       console.error('Error decoding JWT token:', error);
       throw new Error('Невозможно декодировать токен');
@@ -30,7 +30,7 @@ export class JwtService {
    */
   static isTokenExpired(token: string, bufferTime = 60): boolean {
     try {
-      const decoded = jwtDecode.jwtDecode<JwtPayload>(token);
+      const decoded = jwtDecode<JwtPayload>(token);
       const currentTime = Math.floor(Date.now() / 1000);
 
       return decoded.exp < currentTime + bufferTime;
@@ -47,7 +47,7 @@ export class JwtService {
    */
   static getTokenLifetime(token: string): number {
     try {
-      const decoded = jwtDecode.jwtDecode<JwtPayload>(token);
+      const decoded = jwtDecode<JwtPayload>(token);
       const currentTime = Math.floor(Date.now() / 1000);
       return Math.max(0, decoded.exp - currentTime);
     } catch (error) {

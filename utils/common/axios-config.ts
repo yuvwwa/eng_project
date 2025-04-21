@@ -9,7 +9,7 @@ import { JwtService } from '@/services/JWTService';
 
 let storeRef: any = null;
 
-export const API_URL = '';
+export const API_URL = 'http://62.109.18.58:3000/api';
 
 export const api: AxiosInstance = axios.create({
   baseURL: API_URL,
@@ -36,9 +36,9 @@ export const initAxiosInterceptors = (store: any) => {
             );
 
             if (storeRef.refreshTokens.fulfilled.match(resultAction)) {
-              const { access_jwt } = resultAction.payload.tokens;
+              const { access_token } = resultAction.payload.tokens;
               config.headers = config.headers || {};
-              config.headers.Authorization = `Bearer ${access_jwt}`;
+              config.headers.Authorization = `Bearer ${access_token}`;
             }
           } catch (error) {
             console.error('Failed to refresh token:', error);
@@ -72,9 +72,9 @@ export const initAxiosInterceptors = (store: any) => {
           );
 
           if (storeRef.refreshTokens.fulfilled.match(resultAction)) {
-            const { access_jwt } = resultAction.payload.tokens;
+            const { access_token } = resultAction.payload.tokens;
             originalRequest.headers = originalRequest.headers || {};
-            originalRequest.headers.Authorization = `Bearer ${access_jwt}`;
+            originalRequest.headers.Authorization = `Bearer ${access_token}`;
             return api(originalRequest);
           }
         } catch (refreshError) {

@@ -6,12 +6,12 @@ const REFRESH_TOKEN_KEY = 'REFRESH_TOKEN';
 
 export class TokenService {
   static async setTokens({
-    access_jwt,
-    refresh_jwt,
+    access_token,
+    refresh_token,
   }: TokenObjectModel): Promise<void> {
     try {
-      await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, access_jwt);
-      await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refresh_jwt);
+      await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, access_token);
+      await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refresh_token);
     } catch (error) {
       console.error('Error saving tokens:', error);
       throw new Error('Не удалось сохранить токены');

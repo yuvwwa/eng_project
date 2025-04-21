@@ -1,6 +1,6 @@
 export type TokenObjectModel = {
-  access_jwt: string;
-  refresh_jwt: string;
+  access_token: string;
+  refresh_token: string;
 };
 
 export type PersonModel = {
