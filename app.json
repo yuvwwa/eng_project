@@ -1,19 +1,27 @@
 {
   "expo": {
-    "name": "myApp",
-    "slug": "myApp",
+    "name": "engkids",
+    "slug": "engkids",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "icon": "./assets/images/logo.png",
+    "scheme": "engkids",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "splash": {
+        "resizeMode": "native",
+        "backgroundColor": "#ffffff"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "splash": {
+        "resizeMode": "native",
         "backgroundColor": "#ffffff"
       }
     },

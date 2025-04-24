@@ -1,8 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
-import { Slot, useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import { Slot, SplashScreen, useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { restoreAuthState } from '@/store/reducers/auth.reducer';
+import { Text } from 'react-native';
 
 export default function RootLayoutContent() {
   const dispatch = useDispatch<AppDispatch>();
@@ -10,17 +11,32 @@ export default function RootLayoutContent() {
     (state: RootState) => state.authReducer,
   );
   const router = useRouter();
+  const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    dispatch(restoreAuthState());
+    async function prepare() {
+      try {
+        await dispatch(restoreAuthState());
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      if (isAuth) router.replace('/(tabs)');
-      else router.replace('/(auth)/login');
+    if (appIsReady && !loading) {
+      SplashScreen.hideAsync().then(() => {
+        if (isAuth) router.replace('/(tabs)');
+        else router.replace('/(auth)/login');
+      });
     }
-  }, [isAuth, loading]);
+  }, [appIsReady, loading, isAuth]);
+  // TODO: сделать экран загрузки и скелетоны
+  if (!appIsReady || loading) return <Text>Loading...</Text>;
 
   return <Slot />;
 }

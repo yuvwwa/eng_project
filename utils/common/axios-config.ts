@@ -5,7 +5,6 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { TokenService } from '@/services/TokenService';
-import { JwtService } from '@/services/JWTService';
 
 let storeRef: any = null;
 
@@ -19,6 +18,18 @@ export const api: AxiosInstance = axios.create({
   timeout: 10000,
 });
 
+// instance specially for refresh
+const rawApi: AxiosInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 10000,
+});
+
+let isRefreshing = false;
+let refreshPromise: Promise<any> | null = null;
+
 export const initAxiosInterceptors = (store: any) => {
   storeRef = store;
 
@@ -27,28 +38,10 @@ export const initAxiosInterceptors = (store: any) => {
       config: InternalAxiosRequestConfig,
     ): Promise<InternalAxiosRequestConfig> => {
       const accessToken = await TokenService.getAccessToken();
-
       if (accessToken) {
-        if (JwtService.isTokenExpired(accessToken)) {
-          try {
-            const resultAction = await storeRef.dispatch(
-              storeRef.refreshTokens(),
-            );
-
-            if (storeRef.refreshTokens.fulfilled.match(resultAction)) {
-              const { access_token } = resultAction.payload.tokens;
-              config.headers = config.headers || {};
-              config.headers.Authorization = `Bearer ${access_token}`;
-            }
-          } catch (error) {
-            console.error('Failed to refresh token:', error);
-          }
-        } else {
-          config.headers = config.headers || {};
-          config.headers.Authorization = `Bearer ${accessToken}`;
-        }
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
-
       return config;
     },
     (error: AxiosError) => Promise.reject(error),
@@ -66,17 +59,36 @@ export const initAxiosInterceptors = (store: any) => {
       ) {
         (originalRequest as any)._retry = true;
 
-        try {
-          const resultAction = await storeRef.dispatch(
-            storeRef.refreshTokens(),
-          );
+        if (!isRefreshing) {
+          isRefreshing = true;
+          refreshPromise = (async () => {
+            try {
+              const refreshToken = await TokenService.getRefreshToken();
+              if (!refreshToken) throw new Error('No refresh token');
 
-          if (storeRef.refreshTokens.fulfilled.match(resultAction)) {
-            const { access_token } = resultAction.payload.tokens;
-            originalRequest.headers = originalRequest.headers || {};
-            originalRequest.headers.Authorization = `Bearer ${access_token}`;
-            return api(originalRequest);
-          }
+              const response = await rawApi.post('/auth/refresh', {
+                refresh_token: refreshToken,
+              });
+
+              const tokens = response.data;
+              await TokenService.setTokens(tokens);
+              return { tokens };
+            } catch (err) {
+              await TokenService.removeTokens();
+              throw err;
+            } finally {
+              isRefreshing = false;
+            }
+          })();
+        }
+
+        try {
+          const result = await refreshPromise;
+          const { access_token } = result.tokens;
+
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers.Authorization = `Bearer ${access_token}`;
+          return api(originalRequest);
         } catch (refreshError) {
           storeRef.dispatch(storeRef.logout());
           return Promise.reject(refreshError);

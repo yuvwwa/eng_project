@@ -55,6 +55,7 @@ export class AuthService {
       if (!refreshToken) {
         throw new Error('No refresh token available');
       }
+      console.log('refresh token: ', refreshToken);
 
       const response = await api.post('/auth/refresh', {
         refresh_token: refreshToken,
@@ -62,7 +63,7 @@ export class AuthService {
 
       const tokens: TokenObjectModel = response.data;
       await TokenService.setTokens(tokens);
-
+      console.log('new tokens: ', tokens);
       return tokens;
     } catch (error) {
       console.error('Token refresh error:', error);
@@ -102,7 +103,6 @@ export class AuthService {
       throw new Error('Токены не найдены');
     }
 
-    // Если токен доступа истек, пробуем обновить
     if (JwtService.isTokenExpired(accessToken)) {
       const tokens = await this.refreshTokens();
       const authData = JwtService.getUserInfo(tokens.access_token);
@@ -113,7 +113,6 @@ export class AuthService {
       };
     }
 
-    // Если токен действителен, возвращаем текущие данные
     const authData = JwtService.getUserInfo(accessToken);
     return { accessToken, refreshToken, authData };
   }
