@@ -18,6 +18,8 @@ export interface ContinentModel {
   scale: number;
   offsetX: number;
   offsetY: number;
+  headerOffsetX?: number;
+  headerOffsetY?: number;
 }
 
 export interface ButtonScalesMap {
@@ -39,6 +41,8 @@ export const ContinentsModel: ContinentModel[] = [
     scale: 0.6,
     offsetX: 550,
     offsetY: 350,
+    headerOffsetX: 500,
+    headerOffsetY: 300,
   },
   {
     id: 2,
@@ -52,6 +56,8 @@ export const ContinentsModel: ContinentModel[] = [
     scale: 0.8,
     offsetX: 150,
     offsetY: 450,
+    headerOffsetX: 100,
+    headerOffsetY: 400,
   },
   {
     id: 3,
@@ -66,6 +72,8 @@ export const ContinentsModel: ContinentModel[] = [
     scale: 1.1,
     offsetX: 120,
     offsetY: 100,
+    headerOffsetX: 50,
+    headerOffsetY: 10,
   },
   {
     id: 4,
@@ -82,6 +90,8 @@ export const ContinentsModel: ContinentModel[] = [
     scale: 1.1,
     offsetX: 650,
     offsetY: 150,
+    headerOffsetX: 550,
+    headerOffsetY: 50,
   },
   {
     id: 5,
@@ -95,5 +105,7 @@ export const ContinentsModel: ContinentModel[] = [
     scale: 0.8,
     offsetX: 1000,
     offsetY: 600,
+    headerOffsetX: 950,
+    headerOffsetY: 550,
   },
 ];

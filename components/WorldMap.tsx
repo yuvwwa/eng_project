@@ -19,6 +19,7 @@ import {
   ContinentsModel,
 } from '@/models/continents.model';
 import BreathRing from './ui/BreathRing';
+import ContinentHeader from '@/components/ContinentHeader';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -211,6 +212,15 @@ export default function WorldMap() {
             ))}
           </Svg>
 
+          {/* Continent Headers */}
+          {ContinentsModel.map(continent => (
+            <ContinentHeader
+              key={`header-${continent.id}`}
+              continent={continent}
+              activeButtonId={activeButtonId}
+            />
+          ))}
+
           {ContinentsModel.map(continent =>
             continent.steps.map(button => {
               const adjustedX =
@@ -314,21 +324,5 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: '#ffffff',
-  },
-  dashLineContainer: {
-    position: 'absolute',
-    width: 55,
-    height: 55,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dashLine: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 100,
-    borderWidth: 2,
-    borderColor: 'rgb(255, 161, 55)',
-    borderStyle: 'solid',
   },
 });
