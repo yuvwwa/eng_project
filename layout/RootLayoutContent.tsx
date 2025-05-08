@@ -4,6 +4,9 @@ import { Slot, SplashScreen, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { restoreAuthState } from '@/store/reducers/auth.reducer';
 import { Text } from 'react-native';
+import { useFonts, BrunoAce_400Regular } from '@expo-google-fonts/bruno-ace';
+
+SplashScreen.preventAutoHideAsync(); // предотвращаем автоскрытие в самом начале
 
 export default function RootLayoutContent() {
   const dispatch = useDispatch<AppDispatch>();
@@ -11,7 +14,11 @@ export default function RootLayoutContent() {
     (state: RootState) => state.authReducer,
   );
   const router = useRouter();
-  const [appIsReady, setAppIsReady] = useState(false);
+  const [authRestored, setAuthRestored] = useState(false);
+
+  const [fontsLoaded] = useFonts({
+    BrunoAce_400Regular,
+  });
 
   useEffect(() => {
     async function prepare() {
@@ -20,7 +27,7 @@ export default function RootLayoutContent() {
       } catch (e) {
         console.warn(e);
       } finally {
-        setAppIsReady(true);
+        setAuthRestored(true);
       }
     }
 
@@ -28,15 +35,15 @@ export default function RootLayoutContent() {
   }, []);
 
   useEffect(() => {
-    if (appIsReady && !loading) {
+    if (authRestored && fontsLoaded && !loading) {
       SplashScreen.hideAsync().then(() => {
         if (isAuth) router.replace('/(tabs)');
         else router.replace('/(auth)/login');
       });
     }
-  }, [appIsReady, loading, isAuth]);
-  // TODO: сделать экран загрузки и скелетоны
-  if (!appIsReady || loading) return <Text>Loading...</Text>;
+  }, [authRestored, fontsLoaded, loading, isAuth]);
+
+  if (!fontsLoaded || !authRestored || loading) return null;
 
   return <Slot />;
 }
