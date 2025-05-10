@@ -45,6 +45,10 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["js", "jsx", "json", "ts", "tsx", "cjs", "mjs", "mp4"]
     }
   }
 }

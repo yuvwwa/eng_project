@@ -30,7 +30,7 @@ export default function RegisterScreen() {
 
     const resultAction = await dispatch(register({ email, password }));
     if (register.fulfilled.match(resultAction)) {
-      router.replace('/(tabs)');
+      router.replace('/intro-video');
     } else {
       Alert.alert('Ошибка', error || 'Ошибка регистрации');
     }
