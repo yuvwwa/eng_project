@@ -8,43 +8,26 @@ import {
   Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
+import { Alien, Earth, Vector, Polygon, Hanger } from '@/assets/homeScreen';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
       {/* Planet Background */}
       <View style={styles.planetContainer}>
-        <Image
-          source={require('../../assets/homeScreen/Ellipse_earth.png')}
-          style={styles.earthBase}
-          resizeMode="cover"
-        />
-        <Image
-          source={require('@/assets/homeScreen/Vector.png')}
-          style={styles.earthOverlay}
-          resizeMode="cover"
-        />
+        <Earth style={styles.earthBase} />
+        <Vector style={styles.earthOverlay} />
       </View>
 
-      {/* Alien Character */}
+      {/* Alien */}
       <View style={styles.alienContainer}>
-        <Image
-          source={require('@/assets/homeScreen/alian.png')}
-          style={styles.alien}
-          resizeMode="contain"
-        />
+        <Alien style={styles.alien} />
 
-        {/* Speech Bubble */}
         <View style={styles.speechBubble}>
           <Text style={styles.speechText}>I missed you!</Text>
         </View>
 
-        {/* Tail (Polygon) of Speech Bubble */}
-        <Image
-          source={require('@/assets/homeScreen/Polygon.png')}
-          style={styles.speechTail}
-          resizeMode="contain"
-        />
+        <Polygon style={styles.speechTail} />
       </View>
 
       {/* Let's Play Button */}
@@ -57,13 +40,8 @@ export default function HomeScreen() {
       {/* Wardrobe Button */}
       <TouchableOpacity
         style={styles.wardrobeButton}
-        // onPress={() => router.replace('/(tabs)/wardrobe')}>
-        onPress={() => router.replace('/(tabs)')}>
-        <Image
-          source={require('@/assets/homeScreen/hanger.png')}
-          style={styles.hangerIcon}
-          resizeMode="contain"
-        />
+        onPress={() => router.replace('/(tabs)/wardrobe')}>
+        <Hanger style={styles.hangerIcon} />
       </TouchableOpacity>
     </View>
   );
@@ -144,7 +122,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 22,
     fontFamily: 'BrunoAce_400Regular',
-    fontWeight: 'bold',
   },
   wardrobeButton: {
     position: 'absolute',
