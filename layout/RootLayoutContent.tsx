@@ -3,18 +3,19 @@ import { AppDispatch, RootState } from '@/store';
 import { Slot, SplashScreen, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { restoreAuthState } from '@/store/reducers/auth.reducer';
-import { Text } from 'react-native';
 import { useFonts, BrunoAce_400Regular } from '@expo-google-fonts/bruno-ace';
+import IntroVideo from '@/components/IntroVideo';
 
-SplashScreen.preventAutoHideAsync(); // предотвращаем автоскрытие в самом начале
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayoutContent() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuth, loading } = useSelector(
+  const { isAuth, loading, shouldShowIntro } = useSelector(
     (state: RootState) => state.authReducer,
   );
   const router = useRouter();
   const [authRestored, setAuthRestored] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
   const [fontsLoaded] = useFonts({
     BrunoAce_400Regular,
@@ -31,19 +32,23 @@ export default function RootLayoutContent() {
       }
     }
 
-    prepare();
+    prepare().then();
   }, []);
 
   useEffect(() => {
     if (authRestored && fontsLoaded && !loading) {
       SplashScreen.hideAsync().then(() => {
-        if (isAuth) router.replace('/(tabs)');
-        else router.replace('/(auth)/login');
+        if (isAuth) {
+          if (shouldShowIntro) setShowVideo(true);
+          else router.replace('/(tabs)');
+        } else router.replace('/(auth)/login');
       });
     }
-  }, [authRestored, fontsLoaded, loading, isAuth]);
+  }, [authRestored, fontsLoaded, loading, isAuth, shouldShowIntro]);
 
   if (!fontsLoaded || !authRestored || loading) return null;
+
+  if (showVideo) return <IntroVideo />;
 
   return <Slot />;
 }

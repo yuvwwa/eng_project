@@ -12,6 +12,7 @@ export interface AuthState {
   accessToken: string;
   refreshToken: string;
   authData: ILoginJWTDecode | null;
+  shouldShowIntro: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -21,6 +22,7 @@ const initialState: AuthState = {
   accessToken: '',
   refreshToken: '',
   authData: null,
+  shouldShowIntro: false,
   loading: false,
   error: null,
 };
@@ -100,6 +102,12 @@ export const authSlice = createSlice({
     clearError(state) {
       state.error = null;
     },
+    markIntroAsShown(state) {
+      state.shouldShowIntro = false;
+    },
+    resetIntro(state) {
+      state.shouldShowIntro = false;
+    },
   },
   extraReducers: builder => {
     // Обработка login
@@ -132,6 +140,7 @@ export const authSlice = createSlice({
       state.accessToken = access_token;
       state.refreshToken = refresh_token;
       state.authData = getCredentialsFromToken(access_token);
+      state.shouldShowIntro = true;
       state.loading = false;
       state.error = null;
     });
@@ -171,8 +180,12 @@ export const authSlice = createSlice({
       state.refreshToken = '';
       state.authData = null;
     });
+    builder.addCase(markIntroAsShown, state => {
+      state.shouldShowIntro = false;
+    });
   },
 });
 
-export const { loginSuccess, logout, clearError } = authSlice.actions;
+export const { loginSuccess, logout, clearError, markIntroAsShown } =
+  authSlice.actions;
 export default authSlice.reducer;
