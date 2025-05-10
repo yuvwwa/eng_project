@@ -41,7 +41,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Alien style={styles.overlayImage}/>
+      <Alien style={styles.overlayImage} />
       <View style={styles.card}>
         <Text style={styles.title}>Sign up</Text>
 
@@ -52,6 +52,8 @@ export default function RegisterScreen() {
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          textContentType="none"
+          autoCorrect={false}
         />
 
         <Text style={styles.label}>Пароль</Text>
@@ -60,6 +62,8 @@ export default function RegisterScreen() {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          textContentType="none"
+          autoCorrect={false}
         />
 
         <TouchableOpacity
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 28,
     fontFamily: 'BrunoAce_400Regular',
-    color: '#312A54', 
+    color: '#312A54',
   },
   label: {
     color: '#312A54',

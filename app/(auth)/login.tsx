@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Pressable,
+  Keyboard,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,11 +43,14 @@ export default function LoginScreen() {
     router.push('/(auth)/register');
   };
 
-  return (
-    <View style={styles.container}>
-      <Alien style={styles.overlayImage}/>
-      <View style={styles.card}>
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
 
+  return (
+    <Pressable style={styles.container} onPress={dismissKeyboard}>
+      <Alien style={styles.overlayImage} />
+      <View style={styles.card}>
         <Text style={styles.title}>Hello there!</Text>
 
         <Text style={styles.label}>Email</Text>
@@ -55,6 +60,8 @@ export default function LoginScreen() {
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          textContentType="none"
+          autoCorrect={false}
         />
 
         <Text style={styles.label}>Пароль</Text>
@@ -63,6 +70,8 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          textContentType="none"
+          autoCorrect={false}
         />
 
         <TouchableOpacity
@@ -101,10 +110,9 @@ export default function LoginScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </Pressable>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 28,
     fontFamily: 'BrunoAce_400Regular',
-    color: '#312A54', 
+    color: '#312A54',
   },
   label: {
     color: '#312A54',
