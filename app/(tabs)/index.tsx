@@ -40,7 +40,7 @@ export default function HomeScreen() {
       {/* Wardrobe Button */}
       <TouchableOpacity
         style={styles.wardrobeButton}
-        onPress={() => router.replace('/(tabs)/wardrobe')}>
+        onPress={() => router.push('/wardrobe')}>
         <Hanger style={styles.hangerIcon} />
       </TouchableOpacity>
     </View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   alienContainer: {
     position: 'absolute',
-    top: '30%',
+    top: '32%',
     alignSelf: 'center',
     alignItems: 'center',
   },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   wardrobeButton: {
     position: 'absolute',
-    top: '40%',
+    top: '42%',
     width: 58,
     height: 67,
     backgroundColor: '#FFFFFF',
