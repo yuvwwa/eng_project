@@ -20,6 +20,7 @@ import {
 } from '@/models/continents.model';
 import BreathRing from './ui/BreathRing';
 import ContinentHeader from '@/components/ContinentHeader';
+import { Colors } from '@/constants/Colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -177,7 +178,7 @@ export default function WorldMap() {
     const button = ContinentsModel.flatMap(c => c.steps).find(
       b => b.id === buttonId,
     );
-    if (!button?.isAvailble) return;
+    if (button?.status === 0) return;
 
     setActiveButtonId(buttonId);
   };
@@ -245,7 +246,8 @@ export default function WorldMap() {
                   <Pressable
                     style={[
                       styles.button,
-                      !button.isAvailble && styles.disabledButton,
+                      button.status === 2 && styles.doneButton,
+                      button.status === 0 && styles.disabledButton,
                       isActive && styles.activeButton,
                     ]}
                     onPress={() => handleButtonPress(button.id, continent.sid)}>
@@ -253,7 +255,7 @@ export default function WorldMap() {
                       style={[
                         styles.buttonText,
                         isActive && styles.activeText,
-                        !button.isAvailble && styles.disabledText,
+                        button.status !== 1 && styles.doneOrDisabledText,
                       ]}>
                       {button.label}
                     </Text>
@@ -310,6 +312,9 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: 'rgb(189, 189, 189)',
   },
+  doneButton: {
+    backgroundColor: Colors.violetDark,
+  },
   activeButton: {
     backgroundColor: 'rgb(255, 161, 55)',
   },
@@ -319,7 +324,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
   },
-  disabledText: {
+  doneOrDisabledText: {
     color: '#f1f1f1',
   },
   activeText: {

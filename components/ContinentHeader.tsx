@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { ContinentModel } from '@/models/continents.model';
+import { StyleSheet, Text, View } from 'react-native';
+import { ContinentModel, LessonStatus } from '@/models/continents.model';
 import { Colors } from '@/constants/Colors';
 
 interface ContinentHeaderProps {
@@ -12,7 +12,7 @@ const ContinentHeader: React.FC<ContinentHeaderProps> = ({ continent }) => {
   const { progress } = useMemo(() => {
     const totalButtons = continent.steps.length;
     const completedButtons = continent.steps.filter(
-      button => button.isAvailble,
+      button => button.status === LessonStatus.done,
     ).length;
     const progress = totalButtons > 0 ? completedButtons / totalButtons : 0;
 
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     padding: 8,
     elevation: 5,
     width: 200,
-    gap: 45,
+    gap: 35,
   },
   title: {
     fontWeight: 'bold',
