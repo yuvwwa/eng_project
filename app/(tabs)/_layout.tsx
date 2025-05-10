@@ -1,58 +1,126 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ReactNode } from 'react';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import HomeSvg from '../../assets/panel/home.svg';
+import MapSvg from '../../assets/panel/map.svg';
+import VocabularySvg from '../../assets/panel/vocabulary.svg';
+import ProfileSvg from '../../assets/panel/profile.svg';
+
+const { width } = Dimensions.get('window');
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarStyle: styles.tabBar,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#ECEC97',
+        tabBarInactiveTintColor: '#000000',
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused}>
+              <HomeSvg width={32} height={32} />
+            </TabBarIcon>
           ),
         }}
       />
+
       <Tabs.Screen
         name="map"
         options={{
-          title: 'Map',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="map.fill" color={color} />
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused}>
+              <MapSvg width={32} height={32} />
+            </TabBarIcon>
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="vocabulary"
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused}>
+              <VocabularySvg width={32} height={32} />
+            </TabBarIcon>
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused}>
+              <ProfileSvg width={32} height={32} />
+            </TabBarIcon>
           ),
         }}
       />
     </Tabs>
   );
 }
+
+type TabBarIconProps = {
+  children: ReactNode;
+  focused: boolean;
+};
+
+const tabWidth = 358 / 4;
+
+function TabBarIcon({ children, focused }: TabBarIconProps) {
+  return (
+    <View
+      style={[
+        styles.iconWrapper,
+        { width: tabWidth,
+          height: 95
+        },
+        focused ? styles.activeTab : styles.inactiveTab,
+      ]}
+    >
+      <View style={styles.iconInner}>{children}</View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  tabBar: {
+    position: 'absolute',
+    bottom: 57,
+    width: 358,
+    height: 67,
+    borderRadius: 30,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    padding: 0,
+    marginLeft: 18,
+    flexDirection: 'row',
+    overflow: 'hidden',
+  },
+  iconWrapper: {
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconInner: {
+    height: 32,
+    justifyContent: 'center',
+    marginTop: 25,
+  },
+  activeTab: {
+    backgroundColor: '#ECEC97',
+  },
+  inactiveTab: {
+    backgroundColor: 'white',
+  },
+});
