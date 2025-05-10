@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import { register } from '@/store/reducers/auth.reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
+import Alien from '@/assets/form/form_alien.svg';
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState<string>('');
@@ -40,6 +41,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
+      <Alien style={styles.overlayImage}/>
       <View style={styles.card}>
         <Text style={styles.title}>Sign up</Text>
 
@@ -103,27 +105,37 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#CEEC97',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  overlayImage: {
+    width: 393,
+    height: 297,
+    position: 'absolute',
+    top: 0,
+  },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#FDFFF3',
     width: 343,
     height: 475,
     borderRadius: 30,
     padding: 30,
-    borderWidth: 1,
-    borderColor: '#000',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 15,
   },
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 28,
-    fontFamily: 'Inter',
+    fontFamily: 'BrunoAce_400Regular',
+    color: '#312A54', 
   },
   label: {
+    color: '#312A54',
     marginBottom: 7,
     fontSize: 15,
     fontFamily: 'Inter',
@@ -136,11 +148,10 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     paddingHorizontal: 10,
     marginBottom: 10,
+    backgroundColor: 'white',
   },
   signUpButton: {
-    backgroundColor: '#d9d9d9',
-    borderWidth: 1,
-    borderColor: '#000',
+    backgroundColor: '#312A54',
     borderRadius: 100,
     height: 39,
     alignItems: 'center',
@@ -150,7 +161,7 @@ const styles = StyleSheet.create({
   },
   signUpButtonText: {
     fontSize: 15,
-    color: '#000',
+    color: '#FDFFF3',
     fontWeight: 'bold',
   },
   loginContainer: {
@@ -160,11 +171,11 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontSize: 12,
-    color: '#000',
+    color: '#312A54',
   },
   loginLink: {
     fontSize: 12,
-    color: '#000',
+    color: '#312A54',
     fontWeight: 'bold',
     textDecorationLine: 'underline',
   },
