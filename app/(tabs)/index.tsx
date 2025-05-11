@@ -50,7 +50,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#494368',
+    backgroundColor: '#312A54',
   },
   planetContainer: {
     position: 'absolute',
