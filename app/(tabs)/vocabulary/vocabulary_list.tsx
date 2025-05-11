@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     height: 27,
   },
   wordsContainer: {
-    height: '51%', // Уменьшаем высоту контейнера со словами
+    height: '51%',
   },
   grid: {
     paddingTop: 0,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   row: {
     justifyContent: 'space-between',
     width: '100%',
-    marginBottom: CARD_SPACING, // 15px между рядами
+    marginBottom: CARD_SPACING,
   },
   card: {
     backgroundColor: '#FDFFF3',
@@ -132,19 +132,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 6, // Расстояние 6px между картинкой и надписью
+    paddingBottom: 6,
   },
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: 30, // Фиксированная высота для контейнера с текстом
+    height: 30,
   },
   label: {
     fontSize: 22,
     color: 'black',
-    marginRight: 8, // Отступ между текстом и иконкой звука 8px
+    marginRight: 8,
   },
   repeatButton: {
     backgroundColor: '#CEEC97',

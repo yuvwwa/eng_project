@@ -15,12 +15,13 @@ export default function LevelsScreen() {
         <Text style={styles.title}>My words</Text>
       </View>
 
-      {/* Кнопка выбора уровня */}
+      <View style={styles.warnBox}>
+        <Text style={styles.warn}>You don't have any completed words at this level yet.</Text>
+      </View>
       <TouchableOpacity 
-        style={styles.levelButton}
-        onPress={() => router.push('/(tabs)/vocabulary/vocabulary_list')}
-      >
-        <Text style={styles.levelButtonText}>1 level</Text>
+        style={styles.repeatButton}
+        onPress={() => router.push('/(tabs)/map')}>
+        <Text style={styles.repeatText}>Let's study English!</Text>
       </TouchableOpacity>
     </View>
   );
@@ -46,22 +47,33 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'BrunoAce_400Regular',
   },
-  levelButton: {
-    backgroundColor: '#FDFFF3',
+  warnBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  
+  warn: {
+    fontSize: 22,
+    color: 'white',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+  },
+
+  repeatButton: {
+    backgroundColor: '#CEEC97',
     width: '100%',
     height: 60,
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 4,
-    marginBottom: 15,
+    alignSelf: 'center',
+    marginBottom: 190,
   },
-  levelButtonText: {
+  repeatText: {
+    color: '#222',
     fontSize: 22,
-    color: 'black',
-    fontFamily: 'BrunoAce_400Regular',
+    fontWeight: 'bold',
   },
+  
 });
