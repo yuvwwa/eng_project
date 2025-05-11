@@ -9,8 +9,11 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Alien, Earth, Vector, Polygon, Hanger } from '@/assets/homeScreen';
+import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
 
 export default function HomeScreen() {
+  useBackgroundMusic();
+
   return (
     <View style={styles.container}>
       {/* Planet Background */}
