@@ -21,6 +21,8 @@ import {
 import BreathRing from './ui/BreathRing';
 import ContinentHeader from '@/components/ContinentHeader';
 import { Colors } from '@/constants/Colors';
+import { NovelModal } from '@/components/Novel';
+import { HardCodedNovelExample } from '@/models/NovelModel';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -34,6 +36,7 @@ const ELASTIC_RANGE = 30;
 
 export default function WorldMap() {
   const [activeButtonId, setActiveButtonId] = useState<number | null>(null);
+  const [novelVisible, setNovelVisible] = useState(false);
 
   const waterColorAnimation = useSharedValue(0);
   const dashLineRadius = useSharedValue(30); // Радиус пунктирной линии
@@ -173,12 +176,11 @@ export default function WorldMap() {
 
   const handleButtonPress = (buttonId: number, continentName: string) => {
     animateButton(buttonId);
-    console.log(`Нажата кнопка ${buttonId} на материке ${continentName}`);
-
     const button = ContinentsModel.flatMap(c => c.steps).find(
       b => b.id === buttonId,
     );
     if (button?.status === 0) return;
+    if (buttonId === activeButtonId) setNovelVisible(true);
 
     setActiveButtonId(buttonId);
   };
@@ -194,6 +196,15 @@ export default function WorldMap() {
 
   return (
     <View style={styles.container}>
+      <NovelModal
+        slides={HardCodedNovelExample.slides}
+        words={HardCodedNovelExample.words}
+        xp={100}
+        coins={50}
+        levelId={1}
+        visible={novelVisible}
+        onClose={() => setNovelVisible(false)}
+      />
       <Animated.View style={[styles.backgroundOcean, oceanAnimatedStyle]} />
 
       <GestureDetector gesture={panGesture}>

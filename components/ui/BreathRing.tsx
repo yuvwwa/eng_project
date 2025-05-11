@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { Colors } from '@/constants/Colors';
 
 export default function BreathRing() {
   const scale = useSharedValue(1);
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: 'rgb(255, 161, 55)',
+    borderColor: Colors.orange,
     zIndex: -1,
   },
 });
