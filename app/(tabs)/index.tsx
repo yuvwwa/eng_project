@@ -1,21 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
-  Image,
   Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Alien, Earth, Vector, Polygon, Hanger } from '@/assets/homeScreen';
-import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
+import { NovelModal } from '@/components/Novel';
+import { HardCodedNovelExample } from '@/models/NovelModel';
 
 export default function HomeScreen() {
-  useBackgroundMusic();
+  const [novelVisible, setNovelVisible] = useState<boolean>(false);
 
   return (
     <View style={styles.container}>
+      {/* Last new novel */}
+      <NovelModal
+        slides={HardCodedNovelExample.slides}
+        words={HardCodedNovelExample.words}
+        xp={100}
+        coins={50}
+        levelId={1}
+        visible={novelVisible}
+        onClose={() => setNovelVisible(false)}
+      />
+
       {/* Planet Background */}
       <View style={styles.planetContainer}>
         <Earth style={styles.earthBase} />
@@ -36,7 +47,7 @@ export default function HomeScreen() {
       {/* Let's Play Button */}
       <TouchableOpacity
         style={styles.playButton}
-        onPress={() => router.replace('/(tabs)/map')}>
+        onPress={() => setNovelVisible(true)}>
         <Text style={styles.playButtonText}>Let's play!</Text>
       </TouchableOpacity>
 

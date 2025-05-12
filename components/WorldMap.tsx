@@ -36,10 +36,10 @@ const ELASTIC_RANGE = 30;
 
 export default function WorldMap() {
   const [activeButtonId, setActiveButtonId] = useState<number | null>(null);
-  const [novelVisible, setNovelVisible] = useState(false);
+  const [novelVisible, setNovelVisible] = useState<boolean>(false);
 
   const waterColorAnimation = useSharedValue(0);
-  const dashLineRadius = useSharedValue(30); // Радиус пунктирной линии
+  const dashLineRadius = useSharedValue(30);
 
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);

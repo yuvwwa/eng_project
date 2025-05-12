@@ -92,7 +92,7 @@ export const ContinentsModel: ContinentModel[] = [
       { id: 12, sid: 'eur-4', label: '4', x: 300, y: 70, status: 0 },
       { id: 13, sid: 'eur-5', label: '5', x: 440, y: 150, status: 0 },
     ],
-    fill: '#CFD606',
+    fill: '#508B3D',
     scale: 1.1,
     offsetX: 650,
     offsetY: 150,

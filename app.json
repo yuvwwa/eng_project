@@ -4,16 +4,19 @@
     "slug": "engkids",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/uffy.png",
+    "backgroundColor": "#494368",
     "scheme": "engkids",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "splash": {
-        "resizeMode": "native",
-        "backgroundColor": "#ffffff"
-      }
+        "image": "./assets/images/uffy.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#494368"
+      },
+      "bundleIdentifier": "com.engkids.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,21 +24,28 @@
         "backgroundColor": "#ffffff"
       },
       "splash": {
-        "resizeMode": "native",
-        "backgroundColor": "#ffffff"
-      }
+        "image": "./assets/images/uffy.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#494368"
+      },
+      "package": "com.engkids.app"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "splash": {
+        "image": "./assets/images/uffy.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#494368"
+      }
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/uffy.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -48,16 +58,7 @@
     },
     "packagerOpts": {
       "config": "metro.config.js",
-      "sourceExts": [
-        "js",
-        "jsx",
-        "json",
-        "ts",
-        "tsx",
-        "cjs",
-        "mjs",
-        "mp4"
-      ]
+      "sourceExts": ["js", "jsx", "json", "ts", "tsx", "cjs", "mjs", "mp4"]
     }
   }
 }

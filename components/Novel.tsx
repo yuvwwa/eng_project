@@ -73,7 +73,7 @@ export const NovelModal: FC<NovelModel> = ({
               <Text style={styles.newWordsTitle}>Новые слова</Text>
               <View style={styles.wordsContainer}>
                 {words.map(w => (
-                  <Text style={styles.word}>
+                  <Text style={styles.word} key={w.id}>
                     {w.word} - {w.translation}
                   </Text>
                 ))}
