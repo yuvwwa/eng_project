@@ -7,11 +7,14 @@ import HomeSvg from '../../assets/panel/home.svg';
 import MapSvg from '../../assets/panel/map.svg';
 import VocabularySvg from '../../assets/panel/vocabulary.svg';
 import ProfileSvg from '../../assets/panel/profile.svg';
+import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
 
 const { width } = Dimensions.get('window');
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+
+  useBackgroundMusic(true);
 
   return (
     <Tabs
@@ -21,8 +24,7 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#ECEC97',
         tabBarInactiveTintColor: '#000000',
         headerShown: false,
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="index"
         options={{
@@ -82,12 +84,9 @@ function TabBarIcon({ children, focused }: TabBarIconProps) {
     <View
       style={[
         styles.iconWrapper,
-        { width: tabWidth,
-          height: 95
-        },
+        { width: tabWidth, height: 95 },
         focused ? styles.activeTab : styles.inactiveTab,
-      ]}
-    >
+      ]}>
       <View style={styles.iconInner}>{children}</View>
     </View>
   );

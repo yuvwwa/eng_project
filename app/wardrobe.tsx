@@ -28,6 +28,7 @@ import Shorts from '@/assets/wardrobe/shorts.svg';
 import StripedJacket from '@/assets/wardrobe/striped_jacket.svg';
 import TshirtWithName from '@/assets/wardrobe/t-shirt_with_name.svg';
 import Undershirt from '@/assets/wardrobe/undershirt.svg';
+import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
 
 // Определяем категории одежды и типы
 type CategoryType = 'headwear' | 'eyewear' | 'tops' | 'bottoms';
@@ -51,22 +52,34 @@ const categories: Record<CategoryType, ItemId[]> = {
 // Индивидуальные настройки позиционирования для каждого предмета одежды
 const itemPositions: Record<string, ClothingPosition> = {
   // Головные уборы
-  'bow': { top: 60, width: 47.53, height: 24.17, zIndex: 5 },
-  'cap': { top: 75, width: 122.71, height: 45.23, zIndex: 5 },
-  'flowers': { top: 70, width: 132.69, height: 49.74, zIndex: 5 },
-  
+  bow: { top: 60, width: 47.53, height: 24.17, zIndex: 5 },
+  cap: { top: 75, width: 122.71, height: 45.23, zIndex: 5 },
+  flowers: { top: 70, width: 132.69, height: 49.74, zIndex: 5 },
+
   // Очки
-  'glasses': { top: 122, width: 122.7, height: 34.12, zIndex: 5},
-  
+  glasses: { top: 122, width: 122.7, height: 34.12, zIndex: 5 },
+
   // Верхняя одежда
-  'striped_jacket': { top: 170, width: 135.13, height: 105.6, zIndex: 3, left: 130 },
-  'tshirt_with_name': { top: 170, width: 134.13, height: 101.6, zIndex: 3, left: 132 },
-  'undershirt': { top: 175, width: 95.51, height: 80.99, zIndex: 3, left: 150 },
-  
+  striped_jacket: {
+    top: 170,
+    width: 135.13,
+    height: 105.6,
+    zIndex: 3,
+    left: 130,
+  },
+  tshirt_with_name: {
+    top: 170,
+    width: 134.13,
+    height: 101.6,
+    zIndex: 3,
+    left: 132,
+  },
+  undershirt: { top: 175, width: 95.51, height: 80.99, zIndex: 3, left: 150 },
+
   // Нижняя одежда
-  'pants': { top: 241, width: 100.18, height: 66.18, zIndex: 2, left: 148 },
-  'shorts': { top: 240, width: 93.54, height: 49.51, zIndex: 2, left: 149 },
-  'jeans': { top: 240, width: 91.51, height: 62.86, zIndex: 2, left: 151},
+  pants: { top: 241, width: 100.18, height: 66.18, zIndex: 2, left: 148 },
+  shorts: { top: 240, width: 93.54, height: 49.51, zIndex: 2, left: 149 },
+  jeans: { top: 240, width: 91.51, height: 62.86, zIndex: 2, left: 151 },
 };
 
 // Функция для получения категории по ID предмета
@@ -101,11 +114,19 @@ const clothingItems: ClothingItem[] = [
 
 export default function WardrobeScreen() {
   const router = useRouter();
-  const [appliedItems, setAppliedItems] = useState<Partial<Record<CategoryType, string>>>({});
+  const [appliedItems, setAppliedItems] = useState<
+    Partial<Record<CategoryType, string>>
+  >({});
   const [ownedItems, setOwnedItems] = useState<string[]>([]);
   const [stars, setStars] = useState(55);
 
-  const handlePressItem = (id: string, price: number, category: CategoryType) => {
+  useBackgroundMusic(true);
+
+  const handlePressItem = (
+    id: string,
+    price: number,
+    category: CategoryType,
+  ) => {
     const isOwned = ownedItems.includes(id);
     const isApplied = appliedItems[category] === id;
 
@@ -119,7 +140,7 @@ export default function WardrobeScreen() {
       // Применение предмета (с учетом категории)
       setAppliedItems(prev => ({
         ...prev,
-        [category]: id
+        [category]: id,
       }));
     } else {
       // Снятие предмета
@@ -137,31 +158,31 @@ export default function WardrobeScreen() {
   // Функция для расположения элементов гардероба на соответствующих местах
   const getItemStyle = (category: CategoryType): ViewStyle => {
     const baseLeft = (Dimensions.get('window').width - 156) / 2;
-    
+
     switch (category) {
       case 'headwear':
-        return { 
-          top: 10, 
+        return {
+          top: 10,
           left: baseLeft,
-          zIndex: 5 
+          zIndex: 5,
         };
       case 'eyewear':
-        return { 
-          top: 50, 
+        return {
+          top: 50,
           left: baseLeft,
-          zIndex: 4 
+          zIndex: 4,
         };
       case 'tops':
-        return { 
-          top: 70, 
+        return {
+          top: 70,
           left: baseLeft,
-          zIndex: 3 
+          zIndex: 3,
         };
       case 'bottoms':
-        return { 
-          top: 160, 
+        return {
+          top: 160,
           left: baseLeft,
-          zIndex: 2 
+          zIndex: 2,
         };
       default:
         return {};
@@ -186,29 +207,32 @@ export default function WardrobeScreen() {
         <Podium style={styles.podium} />
         <Head style={styles.head} />
         <Body style={styles.body} />
-        
+
         {/* Отображаем одежду с индивидуальными настройками позиционирования */}
         {Object.entries(appliedItems).map(([categoryKey, id]) => {
           const item = clothingItems.find(c => c.id === id);
           if (!item) return null;
-          
+
           const Icon = item.icon;
           const position = itemPositions[id];
-          const baseLeft = position.left !== undefined ? position.left : (Dimensions.get('window').width - position.width) / 2;
-          
+          const baseLeft =
+            position.left !== undefined
+              ? position.left
+              : (Dimensions.get('window').width - position.width) / 2;
+
           return (
-            <Icon 
-              key={id} 
-              width={position.width} 
-              height={position.height} 
+            <Icon
+              key={id}
+              width={position.width}
+              height={position.height}
               style={[
-                styles.overlay, 
-                { 
+                styles.overlay,
+                {
                   top: position.top,
                   left: baseLeft,
-                  zIndex: position.zIndex || 3
-                }
-              ]} 
+                  zIndex: position.zIndex || 3,
+                },
+              ]}
             />
           );
         })}
@@ -219,8 +243,7 @@ export default function WardrobeScreen() {
         style={styles.clothingPanel}
         contentContainerStyle={styles.clothingPanelContent}
         showsVerticalScrollIndicator={false}
-        bounces={false}
-      >
+        bounces={false}>
         <FlatList
           data={clothingItems}
           keyExtractor={item => item.id}
@@ -249,16 +272,17 @@ export default function WardrobeScreen() {
 
             return (
               <TouchableOpacity
-                onPress={() => handlePressItem(item.id, item.price, item.category)}
+                onPress={() =>
+                  handlePressItem(item.id, item.price, item.category)
+                }
                 style={[
                   styles.clothesItem,
                   isApplied && {
                     borderColor: '#312A54',
                     borderWidth: 4,
                   },
-                ]}
-              >
-                <Icon width={54} height={54} style={{ marginTop: -20 }}/>
+                ]}>
+                <Icon width={54} height={54} style={{ marginTop: -20 }} />
                 <View style={styles.priceButton}>
                   <View style={styles.priceContent}>{buttonContent}</View>
                 </View>

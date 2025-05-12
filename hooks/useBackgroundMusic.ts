@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Audio } from 'expo-av';
 
-export const useBackgroundMusic = () => {
+export const useBackgroundMusic = (active: boolean = true) => {
   const soundRef = useRef<Audio.Sound | null>(null);
 
   useEffect(() => {
@@ -10,11 +10,12 @@ export const useBackgroundMusic = () => {
         require('@/assets/audio/background-music.mp3'),
         {
           isLooping: true,
-          volume: 0.4,
+          volume: 0.3,
         },
       );
       soundRef.current = sound;
-      await sound.playAsync();
+
+      if (active) await sound.playAsync();
     };
 
     load();
@@ -23,4 +24,15 @@ export const useBackgroundMusic = () => {
       soundRef.current?.unloadAsync();
     };
   }, []);
+
+  useEffect(() => {
+    if (!soundRef.current) return;
+
+    const updatePlayback = async () => {
+      if (active) await soundRef.current?.playAsync();
+      else await soundRef.current?.pauseAsync();
+    };
+
+    updatePlayback();
+  }, [active]);
 };
