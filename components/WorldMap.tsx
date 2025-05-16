@@ -26,7 +26,7 @@ import { HardCodedNovelExample } from '@/models/NovelModel';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const MAP_WIDTH = SCREEN_WIDTH * 3.1;
+const MAP_WIDTH = SCREEN_WIDTH * 3.3;
 const MAP_HEIGHT = SCREEN_HEIGHT;
 
 const MAX_X = (MAP_WIDTH - SCREEN_WIDTH) / 2;

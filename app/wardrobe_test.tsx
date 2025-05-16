@@ -6,6 +6,7 @@ import {
   StyleSheet,
   FlatList,
   Dimensions,
+  ScrollView,
   ViewStyle,
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -29,6 +30,7 @@ import TshirtWithName from '@/assets/wardrobe/t-shirt_with_name.svg';
 import Undershirt from '@/assets/wardrobe/undershirt.svg';
 import { useBackgroundMusic } from '@/hooks/useBackgroundMusic';
 
+// Определяем категории одежды и типы
 type CategoryType = 'headwear' | 'eyewear' | 'tops' | 'bottoms';
 type ItemId = string;
 
@@ -47,22 +49,45 @@ const categories: Record<CategoryType, ItemId[]> = {
   bottoms: ['pants', 'shorts', 'jeans'],
 };
 
+// Индивидуальные настройки позиционирования для каждого предмета одежды
 const itemPositions: Record<string, ClothingPosition> = {
+  // Головные уборы
   bow: { top: 60, width: 47.53, height: 24.17, zIndex: 5 },
   cap: { top: 75, width: 122.71, height: 45.23, zIndex: 5 },
   flowers: { top: 70, width: 132.69, height: 49.74, zIndex: 5 },
+
+  // Очки
   glasses: { top: 122, width: 122.7, height: 34.12, zIndex: 5 },
-  striped_jacket: { top: 170, width: 135.13, height: 105.6, zIndex: 3, left: 130 },
-  tshirt_with_name: { top: 170, width: 134.13, height: 101.6, zIndex: 3, left: 132 },
+
+  // Верхняя одежда
+  striped_jacket: {
+    top: 170,
+    width: 135.13,
+    height: 105.6,
+    zIndex: 3,
+    left: 130,
+  },
+  tshirt_with_name: {
+    top: 170,
+    width: 134.13,
+    height: 101.6,
+    zIndex: 3,
+    left: 132,
+  },
   undershirt: { top: 175, width: 95.51, height: 80.99, zIndex: 3, left: 150 },
+
+  // Нижняя одежда
   pants: { top: 241, width: 100.18, height: 66.18, zIndex: 2, left: 148 },
   shorts: { top: 240, width: 93.54, height: 49.51, zIndex: 2, left: 149 },
   jeans: { top: 240, width: 91.51, height: 62.86, zIndex: 2, left: 151 },
 };
 
+// Функция для получения категории по ID предмета
 const getCategoryById = (id: string): CategoryType | null => {
   for (const [category, items] of Object.entries(categories)) {
-    if (items.includes(id)) return category as CategoryType;
+    if (items.includes(id)) {
+      return category as CategoryType;
+    }
   }
   return null;
 };
@@ -83,51 +108,107 @@ const clothingItems: ClothingItem[] = [
   { id: 'tshirt_with_name', icon: TshirtWithName, price: 10, category: 'tops' },
   { id: 'undershirt', icon: Undershirt, price: 10, category: 'tops' },
   { id: 'pants', icon: Pants, price: 10, category: 'bottoms' },
+  { id: 'shorts', icon: Shorts, price: 10, category: 'bottoms' },
   { id: 'jeans', icon: Jeans, price: 10, category: 'bottoms' },
 ];
 
 export default function WardrobeScreen() {
   const router = useRouter();
-  const [appliedItems, setAppliedItems] = useState<Partial<Record<CategoryType, string>>>({});
+  const [appliedItems, setAppliedItems] = useState<
+    Partial<Record<CategoryType, string>>
+  >({});
   const [ownedItems, setOwnedItems] = useState<string[]>([]);
-  const [stars, setStars] = useState(90);
+  const [stars, setStars] = useState(55);
 
   useBackgroundMusic(true);
 
-  const handlePressItem = (id: string, price: number, category: CategoryType) => {
+  const handlePressItem = (
+    id: string,
+    price: number,
+    category: CategoryType,
+  ) => {
     const isOwned = ownedItems.includes(id);
     const isApplied = appliedItems[category] === id;
 
     if (!isOwned) {
+      // Покупка предмета
       if (stars >= price) {
         setStars(prev => prev - price);
         setOwnedItems(prev => [...prev, id]);
       }
     } else if (!isApplied) {
-      setAppliedItems(prev => ({ ...prev, [category]: id }));
+      // Применение предмета (с учетом категории)
+      setAppliedItems(prev => ({
+        ...prev,
+        [category]: id,
+      }));
     } else {
-      const newItems = { ...appliedItems };
-      delete newItems[category];
-      setAppliedItems(newItems);
+      // Снятие предмета
+      setAppliedItems(prev => {
+        const newItems = { ...prev };
+        delete newItems[category];
+        return newItems;
+      });
+    }
+  };
+
+  // Получение всех применённых предметов в виде массива для отображения
+  const appliedItemsArray = Object.values(appliedItems);
+
+  // Функция для расположения элементов гардероба на соответствующих местах
+  const getItemStyle = (category: CategoryType): ViewStyle => {
+    const baseLeft = (Dimensions.get('window').width - 156) / 2;
+
+    switch (category) {
+      case 'headwear':
+        return {
+          top: 10,
+          left: baseLeft,
+          zIndex: 5,
+        };
+      case 'eyewear':
+        return {
+          top: 50,
+          left: baseLeft,
+          zIndex: 4,
+        };
+      case 'tops':
+        return {
+          top: 70,
+          left: baseLeft,
+          zIndex: 3,
+        };
+      case 'bottoms':
+        return {
+          top: 160,
+          left: baseLeft,
+          zIndex: 2,
+        };
+      default:
+        return {};
     }
   };
 
   return (
     <View style={styles.container}>
+      {/* Back Button */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <Home width={32} height={32} />
       </TouchableOpacity>
 
+      {/* Stars */}
       <View style={styles.starsContainer}>
         <Text style={styles.starsText}>{stars}</Text>
         <Star width={33} height={32} style={styles.starIcon} />
       </View>
 
+      {/* Stage (Podium + Alien + Clothes) */}
       <View style={styles.stage}>
         <Podium style={styles.podium} />
         <Head style={styles.head} />
         <Body style={styles.body} />
 
+        {/* Отображаем одежду с индивидуальными настройками позиционирования */}
         {Object.entries(appliedItems).map(([categoryKey, id]) => {
           const item = clothingItems.find(c => c.id === id);
           if (!item) return null;
@@ -157,13 +238,17 @@ export default function WardrobeScreen() {
         })}
       </View>
 
-      <View style={styles.clothingPanel}>
+      {/* Clothing Scroll Panel */}
+      <ScrollView
+        style={styles.clothingPanel}
+        contentContainerStyle={styles.clothingPanelContent}
+        showsVerticalScrollIndicator={false}
+        bounces={false}>
         <FlatList
           data={clothingItems}
           keyExtractor={item => item.id}
           numColumns={3}
           contentContainerStyle={styles.clothesGrid}
-          showsVerticalScrollIndicator={false}
           renderItem={({ item }) => {
             const isOwned = ownedItems.includes(item.id);
             const isApplied = appliedItems[item.category] === item.id;
@@ -187,7 +272,9 @@ export default function WardrobeScreen() {
 
             return (
               <TouchableOpacity
-                onPress={() => handlePressItem(item.id, item.price, item.category)}
+                onPress={() =>
+                  handlePressItem(item.id, item.price, item.category)
+                }
                 style={[
                   styles.clothesItem,
                   isApplied && {
@@ -203,7 +290,7 @@ export default function WardrobeScreen() {
             );
           }}
         />
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -292,6 +379,9 @@ const styles = StyleSheet.create({
     minHeight: 240,
     zIndex: 4,
     marginTop: -130,
+  },
+  clothingPanelContent: {
+    paddingBottom: 40,
   },
   clothesGrid: {
     justifyContent: 'center',
